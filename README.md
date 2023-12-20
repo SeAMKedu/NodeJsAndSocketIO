@@ -1,5 +1,7 @@
 # Express.js ja Socket.io
 
+[![DOI](https://zenodo.org/badge/733807414.svg)](https://zenodo.org/doi/10.5281/zenodo.10409021)
+
 Tässä esimerkissä näytetään, miten mittausdataa voidaan näyttää web-sovelluksessa Google Chartin avulla niin, että data päivittyy reaaliaikaisesti.
 
 Ohjelma datagenerator.py generoi simuloitua mittausdataa ja lähettää sen palvelinohjelmalle. Express.js:llä toteutettu palvelinohjelma index.js vastaanottaa mittaukset ja välittää ne html-sivulle, jossa ne näytetään Google Chart -kaaviona. Express-palvelinohjelman ja html-sivun välisessä kommunikoinnissa käytetään socket.io:ta.

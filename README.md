@@ -38,7 +38,7 @@ Express-ohjelma index.js vastaanottaa mittaukset ja välittää ne html-sivulle 
 
 Ohjelman alku on esitetty alla. Socket.io vaatii CORS:n huomioimisen. Myös json-middleware on otettava käyttöön. Saapuneet mittaukset tallennetaan listaan measurementsArray.
 
-```
+```javascript
 const express = require('express')
 const app = express()
 const socket = require("socket.io");
@@ -58,7 +58,7 @@ let measurementsArray = []
 
 Funktio (route) app.get('/', (request, response) käsittelee juureen osoitetun sivupyynnön. Funktio avaa sivun measurements.ejs selaimessa. Tämä ohjelma perustuu ejs-templaten käyttöön.
 
-```
+```javascript
 app.get('/', (request, response) => {
   response.render('measurements')
 })
@@ -68,7 +68,7 @@ Funktio (route) app.post('/api/measurements', (request, response) ottaa vastaan 
 
 Koko lista sarjallistetaan ja lähetetään selainohjelmalle io.emit-viestillä.
 
-```
+```javascript
 app.post('/api/measurements', (request, response) => {
   const body = request.body
 
@@ -102,7 +102,7 @@ Selainohjelma ottaa vastaan socketio-viestejä ja näyttää niissä olevat mitt
 
 Sivun rakenne on esitetty alla:
 
-```
+```html
 <html>
     <head>
       <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -124,7 +124,7 @@ Viivakaavio näytetään div-elementissä curve_chart.
 
 Google Chartin alustus ja socketio-viestin vastaanotto on esitetty alla:
 
-```
+```javascript
         google.charts.load('current', {'packages':['corechart', 'table']});
         google.charts.setOnLoadCallback(init);
 
@@ -142,7 +142,7 @@ Saapunut socketio-viesti sisältää listan mittauksia. Yksi mittausrivi on on m
 
 Funktio drawChart piirtää viivakaavion div-elementtiin curve_chart:
 
-```
+```javascript
         function drawChart(s) {
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'id');

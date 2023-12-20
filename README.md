@@ -10,7 +10,7 @@ Ohjelma datagenerator.py generoi simuloitua mittausdataa ja lähettää sen palv
 
 Python-ohjelma datageneratorclient.py generoi simuloitua mittausdataa trigonometristen funktioiden ja satunnaislukugeneraattorin avulla:
 
-´´´python
+```python
     # let's play that we will read data from sensors
     # simulate the sensor values
     pressure = 100 * math.sin(i/10)
@@ -23,14 +23,14 @@ Python-ohjelma datageneratorclient.py generoi simuloitua mittausdataa trigonomet
         "temperature" : temperature,
         "humidity" : humidity
     }
-´´´
+```
 
 Generoidut mittaukset lähetetään palvelimelle HTTP Postin avulla:
 
-´´´python
+```python
     # serialize the object to json and POST it the thingspeak
     response = requests.post('http://localhost:3001/api/measurements/', json=measurements)
-´´´
+```
 
 ### index.js
 
@@ -38,7 +38,7 @@ Express-ohjelma index.js vastaanottaa mittaukset ja välittää ne html-sivulle 
 
 Ohjelman alku on esitetty alla. Socket.io vaatii CORS:n huomioimisen. Myös json-middleware on otettava käyttöön. Saapuneet mittaukset tallennetaan listaan measurementsArray.
 
-´´´
+```
 const express = require('express')
 const app = express()
 const socket = require("socket.io");
@@ -54,21 +54,21 @@ app.set('view engine', 'ejs');
 
 // lista mittauksia varten
 let measurementsArray = []
-´´´
+```
 
 Funktio (route) app.get('/', (request, response) käsittelee juureen osoitetun sivupyynnön. Funktio avaa sivun measurements.ejs selaimessa. Tämä ohjelma perustuu ejs-templaten käyttöön.
 
-´´´
+```
 app.get('/', (request, response) => {
   response.render('measurements')
 })
-´´´
+```
 
 Funktio (route) app.post('/api/measurements', (request, response) ottaa vastaan HTTP POST:lla osoitteeseen /api/measurements lähetetyn viestin. Aluksi tarkistetaan, että viesti sisältää dataa. Alun perin sanakirjassa olleet tiedot (pressure, temperature, humidity) muunnetaan listamuotoon, sillä Google Charts vaatii tiedon listamuotoisena.
 
 Koko lista sarjallistetaan ja lähetetään selainohjelmalle io.emit-viestillä.
 
-´´´
+```
 app.post('/api/measurements', (request, response) => {
   const body = request.body
 
@@ -92,7 +92,7 @@ app.post('/api/measurements', (request, response) => {
 
   response.json(arrayrow)
 })  
-´´´
+```
 
 ### measurements.ejs
 
@@ -102,7 +102,7 @@ Selainohjelma ottaa vastaan socketio-viestejä ja näyttää niissä olevat mitt
 
 Sivun rakenne on esitetty alla:
 
-´´´
+```
 <html>
     <head>
       <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -118,13 +118,13 @@ Sivun rakenne on esitetty alla:
       <div id="curve_chart" style="width: 900px; height: 500px"></div>
     </body>
   </html>
-´´´
+```
 
 Viivakaavio näytetään div-elementissä curve_chart.
 
 Google Chartin alustus ja socketio-viestin vastaanotto on esitetty alla:
 
-´´´
+```
         google.charts.load('current', {'packages':['corechart', 'table']});
         google.charts.setOnLoadCallback(init);
 
@@ -136,13 +136,13 @@ Google Chartin alustus ja socketio-viestin vastaanotto on esitetty alla:
             drawChart(s);
           })
         }
-´´´
+```
 
 Saapunut socketio-viesti sisältää listan mittauksia. Yksi mittausrivi on on myös listan muodossa (id, pressure, temperature, humidity). Kun socketio-viesti on saapunut, se deserialisoidaan ja muunnettu tieto välitetään funktiolle drawChart().
 
 Funktio drawChart piirtää viivakaavion div-elementtiin curve_chart:
 
-´´´
+```
         function drawChart(s) {
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'id');
@@ -161,13 +161,13 @@ Funktio drawChart piirtää viivakaavion div-elementtiin curve_chart:
           var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
   
           chart.draw(data, options);
-´´´
+```
 
 ## Kirjastojen asennus ja ohjelmien ajaminen
 
 Sovelluksen riippuvuudet on määritetty tiedostossa package.json. 
 
-´´´
+```
 {
   "name": "nodejsmeasurementserver",
   "version": "1.0.0",
@@ -191,23 +191,23 @@ Sovelluksen riippuvuudet on määritetty tiedostossa package.json.
     "nodemon": "^3.0.1"
   }
 }
-´´´
+```
 
 Tiedoston package.json määrittelemät kirjastot asennetaan komennolla
-´´´
+```
 npm install
-´´´
+```
 
 Palvelinohjelma käynnistetään komennolla
-´´´
+```
 npm run dev
-´´´
+```
 
 Avaa seuraavaksi selain osoitteessa localhost:3001
 
 Käynnistä sitten mittausdataa tuottava Python-ohjelma
-´´´
+```
 py datagenerator
-´´´
+```
 
 Uudet mittaukset päivittyvät kaavioon selaimessa reaaliajassa.
